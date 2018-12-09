@@ -6,8 +6,9 @@ public class CombatHandler : MonoBehaviour {
     bool Animating = false;
     bool inCombat = false;
     const float FLOORHEIGHT = -0.6f;
-    const bool WIN = true,
-                LOSE = false;
+    const int WIN = 1,
+                LOSE = -1,
+                TIE = 0;
     public CombatQueue attackQueue = SingletonsCreator.AttackQueue();
     public CombatQueue defenseQueue = SingletonsCreator.DefenseQueue();
     public AnimationQueue animQueue = SingletonsCreator.AnimationQueue();
@@ -74,9 +75,8 @@ public class CombatHandler : MonoBehaviour {
             yield return new WaitForSeconds(1);
             AnimationBean currentSet = animQueue.Next();
             if (currentSet.Win == WIN) {
-                deadOnes.Add(currentSet.animatable);
-            }
-            else {
+                deadOnes.Add(currentSet.Enemy);
+            } else if (currentSet.Win == LOSE) {
                 deadOnes.Add(playerController);
             }
             RunAnimation(currentSet);
@@ -99,38 +99,30 @@ public class CombatHandler : MonoBehaviour {
     private void RunAnimation(AnimationBean anim) {
         //Get a unit vector pointing from the anim to the player.
         Vector3 playerPos = player.transform.position;
-        Vector3 animPos = anim.animatable.transform.position;
-        Vector3 dirVec = playerPos - animPos;
+        Vector3 enemyPos = anim.Enemy.transform.position;
+        Vector3 dirVec = playerPos - enemyPos;
         dirVec /= dirVec.magnitude;
 
         //remove the indicator
-        Destroy(anim.animatable.gameObject.GetComponent<LineRenderer>());
+        Destroy(anim.Enemy.gameObject.GetComponent<LineRenderer>());
         if (anim.CharAttack == "Parry") {
-            //anim.SetTrigger("isParry");
-            //run parry animation here
-
+            playerController.Parry(anim.Enemy);
         }
         else if (anim.CharAttack == "Feint") {
-
-            Vector3 tempPos = CheckAboveFloor(animPos + dirVec);
-            StartCoroutine(MoveAtoB(tempPos, player, 100f));
-            //player.transform.position = tempPos;
+            playerController.Feint(anim.Enemy);
         }
         else if (anim.CharAttack == "Slash") {
-            Vector3 tempPos = CheckAboveFloor(animPos - dirVec);
-            StartCoroutine(MoveAtoB(tempPos, player, 100f));
+            playerController.Slash(anim.Enemy);
         }
         if (anim.EnemyAttack == "Parry") {
-
+            playerController.Parry(playerController);
         }
         else if (anim.EnemyAttack == "Feint") {
-            Vector3 tempPos = CheckAboveFloor(playerPos - dirVec);
-            StartCoroutine(MoveAtoB(tempPos, anim.animatable.gameObject, 100f));
+            anim.Enemy.Feint(playerController);
         }
         else if (anim.EnemyAttack == "Slash")
         {
-            Vector3 tempPos = CheckAboveFloor(playerPos + dirVec);
-            StartCoroutine(MoveAtoB(tempPos, anim.animatable.gameObject, 100f));
+            anim.Enemy.Slash(playerController);
         }
     }
     private void AnimateDeaths(List<Animatable> deaths) {
@@ -156,25 +148,29 @@ public class CombatHandler : MonoBehaviour {
         if (defenseQueue.Length() > 0)
         {
             CombatResponse defense = defenseQueue.Next();
-            bool victor = attack.Battle(defense);
-            if (victor == WIN) {
+            int victor = attack.Battle(defense);
+            if (victor ==  WIN) {
                 animQueue.Add(new AnimationBean(attack.AttackType, defense.AttackType, WIN, attack.Self.GetComponent<EnemyLogic>()));
             }
-            else {
+            else if (victor == LOSE) {
                 animQueue.Add(new AnimationBean(attack.AttackType, defense.AttackType, LOSE, attack.Self.GetComponent<EnemyLogic>()));
+            }
+            else
+            {
+                animQueue.Add(new AnimationBean(attack.AttackType, defense.AttackType, TIE, attack.Self.GetComponent<EnemyLogic>()));
             }
         }
         else {
             animQueue.Add(new AnimationBean(attack.AttackType, "nothing", LOSE, attack.Self.GetComponent<EnemyLogic>()));
         }
     }
-    public Vector3 CheckAboveFloor(Vector3 position) {
-        if (position.y < FLOORHEIGHT)
-        {
-            position.y = FLOORHEIGHT;
-        }
-        return position;
-    }
+    //public Vector3 CheckAboveFloor(Vector3 position) {
+    //    if (position.y < FLOORHEIGHT)
+    //    {
+    //        position.y = FLOORHEIGHT;
+    //    }
+    //    return position;
+    //}
 
     private IEnumerator MoveAtoB(Vector3 end, GameObject item, float speed) {
        
@@ -187,5 +183,14 @@ public class CombatHandler : MonoBehaviour {
             yield return null;
         }
 
+    }
+
+    public Vector3 CheckAboveFloor(Vector3 position)
+    {
+        if (position.y < FLOORHEIGHT)
+        {
+            position.y = FLOORHEIGHT;
+        }
+        return position;
     }
 }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CombatResponse {
-    public static bool WIN = true, 
-                        LOSE = false;
+    public static int WIN = 1,
+                        LOSE = -1,
+                        TIE = 0;
 
     public int HorizDir { get; private set; }
     public int VertDir { get; private set; }
@@ -17,25 +18,21 @@ public class CombatResponse {
         Self = selfInit;
     }
 
-    public bool Battle(CombatResponse defender)
-    {
-        if (DirCheck(this.HorizDir, defender.HorizDir) &&
-        DirCheck(this.VertDir, defender.VertDir) &&
-            SingletonsCreator.SingleMoveSetTable().Compare(this.AttackType, defender.AttackType)) {
-            return WIN;
+    public int Battle(CombatResponse defender) {
+        if (DirCheck(this.HorizDir, defender.HorizDir) && DirCheck(this.VertDir, defender.VertDir)) {
+            return SingletonsCreator.SingleMoveSetTable().Compare(this.AttackType, defender.AttackType);
         } else {
-            return LOSE;
+            return -1;
         }
-
     }
 
     private bool DirCheck(int attacker, int defender) {
         if(attacker == 0 && defender == 0) {
-            return WIN;
+            return true; //win
         } else if (defender == -attacker) {
-            return WIN;
+            return true; //win
         } else {
-            return LOSE;
+            return false; //false
         }
     }
 }

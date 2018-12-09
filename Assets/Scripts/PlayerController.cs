@@ -8,7 +8,6 @@ public class PlayerController : Animatable {
     private bool isHurting, isDead, isParry, isUnsheathe, up, down, left, right;
     private bool facingLeft = true;
 
-    private Rigidbody2D rb;
     private Animator anim;
     private CombatHandler combatHandler;
 

@@ -5,12 +5,13 @@ using UnityEngine;
 public class AnimationBean {
     public string EnemyAttack { get; private set; }
     public string CharAttack { get; private set; }
-    public bool Win { get; private set; }
-    public Animatable animatable { get; private set; }
-    public AnimationBean (string enemyAttackInit, string charAttackInit, bool winInit, Animatable animatableInit) {
+    public int Win { get; private set; }
+    public Animatable Enemy { get; private set; }
+    public Animatable This { get; private set; }
+    public AnimationBean (string enemyAttackInit, string charAttackInit, int winInit, Animatable enemyInit) {
         EnemyAttack = enemyAttackInit;
         CharAttack = charAttackInit;
         Win = winInit;
-        animatable = animatableInit;
+        Enemy = enemyInit;
     }
 }
