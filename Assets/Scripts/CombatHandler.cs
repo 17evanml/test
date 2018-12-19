@@ -20,6 +20,7 @@ public class CombatHandler : MonoBehaviour {
     private void Start() {
         player = GameObject.Find("Player");
         playerController = (PlayerController)player.GetComponent("PlayerController");
+        enemyList.Register(GetComponent<EnemySpawner>());
     }
 
     void Update() {

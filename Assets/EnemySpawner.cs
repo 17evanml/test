@@ -13,7 +13,6 @@ public class EnemySpawner : MonoBehaviour, IPropertyChangeListener
     private GameObject player;
 
     void Start () {
-        SingletonsCreator.EnemyList().Register(this);
         player = GameObject.Find("Player");
         StartCoroutine(SpawnEnemy(nextSpawnCount));
         nextSpawnCount++;
@@ -26,7 +25,6 @@ public class EnemySpawner : MonoBehaviour, IPropertyChangeListener
 
 
     IEnumerator SpawnEnemy(int count) {
-        SingletonsCreator.EnemyList().Register(this);
         yield return new WaitForSeconds(4);
         for (int i = 0; i < count; i++) {
             float x = PickX();
@@ -38,7 +36,6 @@ public class EnemySpawner : MonoBehaviour, IPropertyChangeListener
     float PickY()
     {
         int randomChanger = Random.Range(0, 10000);
-
         Random.InitState(System.DateTime.Now.Millisecond * randomChanger);
         float y = Random.Range(yMin, yMax);
         //Debug.Log("Y: " + y);
