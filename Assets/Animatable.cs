@@ -4,12 +4,12 @@ using UnityEngine;
 
 public abstract class Animatable : MonoBehaviour {
     const float FLOORHEIGHT = -0.6f;
-    bool isParry;
-    bool isFeint;
-    bool isSlash;
+    protected bool isParry;
+    protected bool isFeint;
+    protected bool isSlash;
     public Rigidbody2D rb;
     protected bool inCombat = false;
-    private Animator anim;
+    protected Animator anim;
     // Use this for initialization
     protected void Start()
     {
@@ -86,5 +86,11 @@ public abstract class Animatable : MonoBehaviour {
             position.y = FLOORHEIGHT;
         }
         return position;
+    }
+
+    protected IEnumerator TrueDeath(int time)
+    {
+        yield return new WaitForSeconds(time);
+        Destroy(gameObject);
     }
 }

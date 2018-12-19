@@ -12,7 +12,7 @@ public class EnemyLogic : Animatable {
     bool isHurting, isDead, isKicking, isTesting;
     bool facingRight = true;
     Vector3 localScale;
-    Animator anim;
+    //Animator anim;
 
     private int[] AngleRanges = { 20, 72, 108, 160 };
 
@@ -40,8 +40,7 @@ public class EnemyLogic : Animatable {
     override public void Death() {
         combatHandler.RemoveEnemy(this);
         anim.SetTrigger("isDead");
-        //yield return new WaitForSeconds(2);
-        //Destroy(gameObject);
+        StartCoroutine(TrueDeath(2));
     }
 
     void WatchPlayer() {
@@ -64,6 +63,7 @@ public class EnemyLogic : Animatable {
             if (distVec.magnitude < range) {
                 EnterCombat();
                 anim.SetBool("isRunning", false);
+                Debug.Log("Attack Added! " + this);
                 combatHandler.attackQueue.Add(ChooseAttack());
                 combatHandler.EnterCombat();
             }
@@ -78,6 +78,7 @@ public class EnemyLogic : Animatable {
 
 
     override public void ExitCombat() {
+        Debug.Log("exited Combat");
         base.ExitCombat();
     }
 

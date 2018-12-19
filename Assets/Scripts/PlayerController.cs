@@ -5,10 +5,10 @@ using UnityEngine;
 public class PlayerController : Animatable {
     public float dirX, moveSpeed = 2f;
     public float runSpeed = 5f;
-    private bool isHurting, isDead, isParry, isUnsheathe, up, down, left, right;
+    private bool isHurting, isDead, isUnsheathe, up, down, left, right;
     private bool facingLeft = true;
 
-    private Animator anim;
+    //private Animator anim;
     private CombatHandler combatHandler;
 
     Vector3 localScale;
@@ -124,7 +124,6 @@ public class PlayerController : Animatable {
     }
 
     public override void ExitCombat() {
-        print("instant");
         base.ExitCombat();
     }
 
@@ -211,9 +210,12 @@ public class PlayerController : Animatable {
         if (isParry)
             dirX = 0;
     }
+
+    public void LetMeKnow(System.Object message)
+    {
+        Debug.Log(message);
+    }
 }
-
-
 
 
 //Archived

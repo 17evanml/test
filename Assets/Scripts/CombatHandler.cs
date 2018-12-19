@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class CombatHandler : MonoBehaviour {
     bool Animating = false;
-    bool inCombat = false;
+    public bool inCombat = false;
     const float FLOORHEIGHT = -0.6f;
     const int WIN = 1,
                 LOSE = -1,
                 TIE = 0;
-    public CombatQueue attackQueue = SingletonsCreator.AttackQueue();
-    public CombatQueue defenseQueue = SingletonsCreator.DefenseQueue();
-    public AnimationQueue animQueue = SingletonsCreator.AnimationQueue();
-    public List<EnemyLogic> enemyLogics = new List<EnemyLogic>();
+    public LockableQueue<CombatResponse> attackQueue = SingletonsCreator.AttackQueue();
+    public LockableQueue<CombatResponse> defenseQueue = SingletonsCreator.DefenseQueue();
+    public GenericQueue<AnimationBean> animQueue = SingletonsCreator.AnimationQueue();
+    public ANotifyingList<EnemyLogic> enemyList = SingletonsCreator.EnemyList();
     public GameObject player;
     public PlayerController playerController;
 
@@ -23,14 +23,14 @@ public class CombatHandler : MonoBehaviour {
     }
 
     void Update() {
-
+        print(enemyList.ListenerCount());
     }
 
     public void AddEnemy(EnemyLogic enemy) {
-        enemyLogics.Add(enemy);
+        enemyList.Add(enemy);
     }
     public void RemoveEnemy(EnemyLogic enemy) {
-        enemyLogics.Remove(enemy);
+        enemyList.Remove(enemy);
     }
 
     public void EnterCombat() {
@@ -68,8 +68,8 @@ public class CombatHandler : MonoBehaviour {
         defenseQueue.Clear();
         Animating = true;
         List<Animatable> deadOnes = new List<Animatable>();
-        for (int i = 0; i < enemyLogics.Count; i++) {
-            enemyLogics[i].EnterCombat();
+        for (int i = 0; i < enemyList.Count(); i++) {
+            enemyList.Get(i).EnterCombat();
         }
         while (animQueue.Length() > 0) {
             yield return new WaitForSeconds(1);
@@ -81,7 +81,7 @@ public class CombatHandler : MonoBehaviour {
             }
             RunAnimation(currentSet);
         }
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
         AnimateDeaths(deadOnes);
         yield return new WaitForSeconds(1);
         ExitCombat();
@@ -89,8 +89,8 @@ public class CombatHandler : MonoBehaviour {
 
     private void ExitCombat() {
         playerController.ExitCombat();
-        for (int i = 0; i < enemyLogics.Count; i++) {
-            enemyLogics[i].ExitCombat();
+        for (int i = 0; i < enemyList.Count(); i++) {
+            enemyList.Get(i).ExitCombat();
         }
         inCombat = false;
         Animating = false;

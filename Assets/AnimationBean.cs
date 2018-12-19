@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationBean {
-    public string EnemyAttack { get; private set; }
+    public string EnemyAttack { get; private set; 
+    }
     public string CharAttack { get; private set; }
     public int Win { get; private set; }
     public Animatable Enemy { get; private set; }

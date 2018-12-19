@@ -660,6 +660,7 @@ GameObject:
   - component: {fileID: 389086592}
   - component: {fileID: 389086593}
   - component: {fileID: 389086594}
+  - component: {fileID: 389086595}
   m_Layer: 0
   m_Name: GameRules
   m_TagString: Untagged
@@ -691,7 +692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166a2c5f8d92943e3b650f325baf0fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyLogics: []
+  inCombat: 0
   player: {fileID: 0}
   playerController: {fileID: 0}
 --- !u!82 &389086594
@@ -789,6 +790,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &389086595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 389086591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fbd5fc768d84831bcf5e8d54e60b30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shadowEnemy: {fileID: 1375721221850078, guid: 0dfe603dbb3fc42eeaa32b843d3425ba,
+    type: 2}
 --- !u!1 &409059440
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,7 +824,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &409059441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1178,7 +1192,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &653820978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1596,7 +1610,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 999464825}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1818,7 +1832,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1845781625
 MonoBehaviour:
   m_ObjectHideFlags: 0
